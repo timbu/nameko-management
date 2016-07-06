@@ -43,7 +43,7 @@ class Management(DependencyProvider):
         super(Management, self).stop()
 
 
-class ManagementMixin(object):
+class ManagementServiceMixin(object):
     managment = Management()
     server_info = ServerInfo()
     runtime_stats = RuntimeStats()
