@@ -6,10 +6,15 @@ from nameko.web.server import WebServer, parse_address
 from .dependencies import RuntimeStats, ServerInfo
 from .plugins import plugin_registry
 
-log = getLogger(__file__)
+log = getLogger('nameko-management')
 
 
 class ManagementWebServer(WebServer):
+
+    def start(self):
+        super(ManagementWebServer, self).start()
+        log.info("listening at: %s", self.bind_addr)
+
     @property
     def bind_addr(self):
         address_str = self.container.config.get(
@@ -36,6 +41,11 @@ class Management(DependencyProvider):
         }
         for plugin in plugin_instances:
             self.server.register_provider(plugin)
+            log.info(
+                'registered plugin: %s at %s',
+                plugin.name,
+                plugin.get_url_rule()
+            )
 
     def stop(self):
         for plugin in self.plugin_map.values():
